@@ -1,15 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { App } from './App';
 import reportWebVitals from './reportWebVitals';
+import { Config, DAppProvider } from '@usedapp/core';
+import { SysTestnet } from './networks/SYSTestnet';
+import { Rollux } from './networks/Rollux';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+
+const config: Config = {
+  readOnlyChainId: SysTestnet.chainId,
+  readOnlyUrls: {
+    [SysTestnet.chainId]: SysTestnet.rpcUrl as string,
+    [Rollux.chainId]: Rollux.rpcUrl as string
+  },
+  networks: [SysTestnet, Rollux],
+}
+
 root.render(
   <React.StrictMode>
-    <App />
+    <DAppProvider config={config}>
+      <App />
+    </DAppProvider>
   </React.StrictMode>
 );
 

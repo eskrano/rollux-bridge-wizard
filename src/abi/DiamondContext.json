@@ -1,0 +1,288 @@
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "deployer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "newDiamond",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string[]",
+        "name": "facetNames",
+        "type": "string[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "facets",
+        "type": "address[]"
+      }
+    ],
+    "name": "DiamondDeployed",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "allDiamonds",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "allDiamonds_",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "allFacetNames",
+    "outputs": [
+      {
+        "internalType": "string[]",
+        "name": "allFacetNames_",
+        "type": "string[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "allFacets",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "allFacets_",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "diamond",
+        "type": "address"
+      }
+    ],
+    "name": "configOfDiamond",
+    "outputs": [
+      {
+        "internalType": "string[]",
+        "name": "diamondConfig",
+        "type": "string[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string[]",
+        "name": "facetNames_",
+        "type": "string[]"
+      }
+    ],
+    "name": "deployDiamond",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "newDiamond",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "facetAddress",
+        "type": "address"
+      }
+    ],
+    "name": "deregisterFacet",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "success",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "diamondsOfUser",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "allDiamondsOfUser",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "facetDepNames",
+    "outputs": [
+      {
+        "internalType": "string[]",
+        "name": "facetDepNames_",
+        "type": "string[]"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "facetFuncs",
+    "outputs": [
+      {
+        "internalType": "bytes4[]",
+        "name": "funcs_",
+        "type": "bytes4[]"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "facetName",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "name_",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "facetName_",
+        "type": "string"
+      }
+    ],
+    "name": "facetOfName",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "facetWithName",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "numberOfFacets",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "totalFacets",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "origin",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "origin_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "owner_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "facetAddress",
+        "type": "address"
+      }
+    ],
+    "name": "registerFacet",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "success",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "success",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
