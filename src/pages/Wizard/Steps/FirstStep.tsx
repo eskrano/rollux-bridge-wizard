@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import { ERC20DeploymentForm } from './ERC20DeploymentForm';
-import { useEthers, useContractFunction, useNetwork } from '@usedapp/core';
+import { useEthers, useContractFunction, useNetwork, Falsy } from '@usedapp/core';
 import { Contract, utils } from 'ethers';
 import FactoryABI from './../../../abi/DiamondContext.json'
 import ERC20BasicFacet from './../../../abi/ERC20BasicFacet.json'
@@ -36,8 +36,29 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
     const [isFirstConfigured, setIsFirstConfigured] = useState<boolean>(false);
     const [isSecondConfigured, setIsSecondConfigured] = useState<boolean>(false);
 
+    // contracts 
+
+    const [ERC20Facet1, setERC20Facet1] = useState<Contract | Falsy>(null);
+    const [ERC20Facet2, setERC20Facet2] = useState<Contract | Falsy>(null);
 
     // effects
+
+    useEffect(() => {
+        if (utils.isAddress(firstErc20FacetAddress)) {
+            setERC20Facet1(
+                new Contract(firstErc20FacetAddress, new utils.Interface(ERC20BasicFacet))
+            )
+        }
+    }, [firstErc20FacetAddress])
+
+
+    useEffect(() => {
+        if (utils.isAddress(secondErc20FacetAddress)) {
+            setERC20Facet2(
+                new Contract(secondErc20FacetAddress, new utils.Interface(ERC20BasicFacet))
+            )
+        }
+    }, [secondErc20FacetAddress])
 
     useEffect(() => {
         if (isFirstConfigured && isSecondConfigured) {
@@ -49,8 +70,8 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
     // contracts
 
     const factoryContract = new Contract('0x49533069283be8DD3B59ca0A3bbAd044B2f9f0B6', new utils.Interface(FactoryABI));
-    const ERC20Facet1 = new Contract(firstErc20FacetAddress || Rollux.multicallAddress, new utils.Interface(ERC20BasicFacet));
-    const ERC20Facet2 = new Contract(secondErc20FacetAddress || Rollux.multicallAddress, new utils.Interface(ERC20BasicFacet));
+    // const ERC20Facet1 = new Contract(firstErc20FacetAddress || Rollux.multicallAddress, new utils.Interface(ERC20BasicFacet));
+    // const ERC20Facet2 = new Contract(secondErc20FacetAddress || Rollux.multicallAddress, new utils.Interface(ERC20BasicFacet));
 
 
     const { send, state } = useContractFunction(factoryContract, 'deployDiamond');
@@ -82,14 +103,23 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
     }
 
     const configureFacets = async () => {
-        console.log(ERC20Facet1.address);
-        console.log(ERC20Facet2.address);
+
+        if (ERC20Facet1) {
+            console.log(
+                firstErc20Name,
+                firstErc20Symbol,
+                utils.parseEther(firstErc20Supply),
+                ERC20Facet1?.address
+            )
+        }
 
         await sendFirstInit(
             firstErc20Name,
             firstErc20Symbol,
             utils.parseEther(firstErc20Supply)
         )
+
+
 
         await sendSecondInit(
             secondErc20Name,
@@ -128,15 +158,6 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
         }
     }, [stateSecondFacet])
 
-    const configureFacet = async (symbol: string,
-        name: string,
-        totalSupply: string,
-        flagConfigured: React.Dispatch<React.SetStateAction<boolean>>,
-        facetAddress: string,
-
-    ) => {
-
-    }
 
     const executeDeployment = async () => {
         console.log(factoryContract.address);
