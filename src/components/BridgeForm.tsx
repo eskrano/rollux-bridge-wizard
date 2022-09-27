@@ -10,12 +10,17 @@ export enum BridgeAction {
 
 interface IBridgeFormProps {
     direction: BridgeAction,
+    onSubmit: (amount: string, isNative: boolean, tokenAddress: string) => void
 }
 
 export const BridgeForm: FC<IBridgeFormProps> = (props) => {
     const [amount, setAmount] = useState<string>('0.00');
     const [isNative, setIsNative] = useState<boolean>(true);
     const [token, setToken] = useState<string>('main');
+
+    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [infoMessage, setInfoMessage] = useState<string>('');
+    const [successMessage, setSuccessMessage] = useState<string>('');
 
     useEffect(() => {
         if (token === 'main') {
@@ -27,6 +32,19 @@ export const BridgeForm: FC<IBridgeFormProps> = (props) => {
 
     const direction: BridgeAction = props.direction;
 
+    const handleSubmit = async () => {
+        if (parseFloat(amount) <= 0) {
+            setErrorMessage("Amount should be greater than 0.");
+
+            return;
+        }
+
+        props.onSubmit(
+            amount,
+            isNative,
+            token
+        )
+    }
 
 
     return (
@@ -50,7 +68,7 @@ export const BridgeForm: FC<IBridgeFormProps> = (props) => {
                             <label htmlFor="Token">
                                 Select Token
                             </label>
-                            <select className="form-control" onChange={(e: React.ChangeEvent<HTMLSelectElement> ) => {
+                            <select className="form-control" onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                                 setToken(e.target.value)
                             }}>
                                 <option value="main">tSYS</option>
@@ -66,13 +84,13 @@ export const BridgeForm: FC<IBridgeFormProps> = (props) => {
                 <Row className="mt-3">
                     <Col sm={12} md={12}>
                         <div className="d-flex d-block">
-                            {isNative && <Button variant="success">{direction}</Button>}
+                            {isNative && <Button onClick={handleSubmit} variant="success">{direction}</Button>}
                             {!isNative && <Button variant="primary">Approve {direction} </Button>}
                         </div>
                     </Col>
                 </Row>
 
             </Card.Body>
-        </Card>
+        </Card >
     );
 }

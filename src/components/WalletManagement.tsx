@@ -3,6 +3,8 @@ import React, { FC } from "react";
 import { Button, Card } from "react-bootstrap";
 import { shortenAddress } from "@usedapp/core";
 import { formatEther, formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
+import { Rollux } from "../networks/Rollux";
+import { SysTestnet } from "../networks/SYSTestnet";
 
 
 const NotConnectedWallet: FC<{ connect: () => void }> = ({ connect }) => {
@@ -14,7 +16,8 @@ const NotConnectedWallet: FC<{ connect: () => void }> = ({ connect }) => {
 }
 
 const ConnectedWalletInfo: FC<{ account: string, deactivate: () => void }> = ({ account, deactivate }) => {
-    const balance = useEtherBalance(account);
+    const balanceRollux = useEtherBalance(account, { chainId: Rollux.chainId });
+    const balanceSysTestnet = useEtherBalance(account, { chainId: SysTestnet.chainId});
 
     return (
         <div>
@@ -24,10 +27,18 @@ const ConnectedWalletInfo: FC<{ account: string, deactivate: () => void }> = ({ 
                 </Card.Header>
             </Card>
 
-            {balance && <>
+            {balanceRollux && <>
                 <Card>
                     <Card.Header>
-                        tSys - {formatUnits(balance, 18)}
+                        rSYS - {formatUnits(balanceRollux, 18)} (Rollux L2)
+                    </Card.Header>
+                </Card>
+            </>}
+
+            {balanceSysTestnet && <>
+                <Card>
+                    <Card.Header>
+                        tSys - {formatUnits(balanceSysTestnet, 18)} (Syscoin testnet L1)
                     </Card.Header>
                 </Card>
             </>}
