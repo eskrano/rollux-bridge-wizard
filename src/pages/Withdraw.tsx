@@ -8,6 +8,8 @@ export const Withdraw: FC<{}> = () => {
     const handleWithdraw = (amount: string, isNative: boolean, tokenAddress: string) => {
         console.log("Submitted bridge");
         console.log(amount, isNative, tokenAddress);
+
+        alert('Under construction.');
     }
 
 

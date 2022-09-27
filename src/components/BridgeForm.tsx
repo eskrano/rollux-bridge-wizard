@@ -71,12 +71,12 @@ export const BridgeForm: FC<IBridgeFormProps> = (props) => {
                             <select className="form-control" onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                                 setToken(e.target.value)
                             }}>
-                                <option value="main">tSYS</option>
-                                {Object.keys(tokens).map((value, index) => {
+                                <option value="main">tSYS (native)</option>
+                                {/* {Object.keys(tokens).map((value, index) => {
                                     return (
                                         <option key={value} value={value}>{tokens[value].name}</option>
                                     )
-                                })}
+                                })} */}
                             </select>
                         </div>
                     </Col>
