@@ -4,6 +4,7 @@ import { ERC20DeploymentForm } from './ERC20DeploymentForm';
 import { useEthers, useContractFunction, useNetwork } from '@usedapp/core';
 import { Contract, utils } from 'ethers';
 import FactoryABI from './../../../abi/DiamondContext.json'
+import ERC20BasicFacet from './../../../abi/ERC20BasicFacet.json'
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { Rollux } from '../../../networks/Rollux';
 
@@ -28,6 +29,7 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
     const [secondErc20Symbol, setSecondErc20Symbol] = useState<string>('');
     const [secondErc20Supply, setSecondErc20Supply] = useState<string>('');
     const [secondErc20FacetAddress, setSecondErc20FacetAddress] = useState<string>('');
+    const [secondErc20DiamondAddress, setSecondErc20DiamondAddress] = useState<string>('');
 
     // flags
 
@@ -46,9 +48,9 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
 
     // contracts
 
-    const factoryContract = new Contract(process.env.REACT_APP_FACTORY_ADDRESS || '0x276A649285Cc2e1fF99437Fa93FDba3AA1EdE0B4', new utils.Interface(FactoryABI));
-    const ERC20Facet1 = new Contract(firstErc20FacetAddress || Rollux.multicallAddress, new utils.Interface(FactoryABI));
-    const ERC20Facet2 = new Contract(secondErc20FacetAddress || Rollux.multicallAddress, new utils.Interface(FactoryABI));
+    const factoryContract = new Contract('0x49533069283be8DD3B59ca0A3bbAd044B2f9f0B6', new utils.Interface(FactoryABI));
+    const ERC20Facet1 = new Contract(firstErc20FacetAddress || Rollux.multicallAddress, new utils.Interface(ERC20BasicFacet));
+    const ERC20Facet2 = new Contract(secondErc20FacetAddress || Rollux.multicallAddress, new utils.Interface(ERC20BasicFacet));
 
 
     const { send, state } = useContractFunction(factoryContract, 'deployDiamond');
@@ -79,8 +81,26 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
         return deployEvent;
     }
 
+    const configureFacets = async () => {
+        console.log(ERC20Facet1.address);
+        console.log(ERC20Facet2.address);
+
+        await sendFirstInit(
+            firstErc20Name,
+            firstErc20Symbol,
+            utils.parseEther(firstErc20Supply)
+        )
+
+        await sendSecondInit(
+            secondErc20Name,
+            secondErc20Symbol,
+            utils.parseEther(secondErc20Supply)
+        )
+    }
+
+
     /**
-     * First facet & diamind
+     * First facet & diamond
      */
     useEffect(() => {
         if (state.receipt) {
@@ -95,6 +115,19 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
         }
     }, [state])
 
+    useEffect(() => {
+        if (stateSecondFacet.receipt) {
+            const event = getDeployedEvent(stateSecondFacet.receipt);
+
+            if (event !== undefined) {
+                //@ts-ignore
+                setSecondErc20FacetAddress(event.args.facets[0])
+                //@ts-ignore
+                setSecondErc20DiamondAddress(event.args.newDiamond);
+            }
+        }
+    }, [stateSecondFacet])
+
     const configureFacet = async (symbol: string,
         name: string,
         totalSupply: string,
@@ -106,27 +139,11 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
     }
 
     const executeDeployment = async () => {
+        console.log(factoryContract.address);
 
-      
+        await send(['ERC20BasicFacet']);
+
         await sendSecondFacet(['ERC20BasicFacet']);
-
-
-        // setTimeout(() => {
-        //     setFirstErc20FacetAddress('0x1411121972e34093a0b190be37ea8d3310b094b4')
-        // }, 1000)
-        // setTimeout(() => {
-        //     setSecondErc20FacetAddress('0x1411121972e34093a0b190be37ea8d3310b094b4')
-        // }, 3000)
-
-        // setTimeout(() => {
-        //     setIsFirstConfigured(true);
-        // }, 6000);
-
-        // setTimeout(() => {
-        //     setIsSecondConfigured(true)
-        // }, 9000);
-
-
 
 
     }
@@ -147,23 +164,23 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm={12}>
+                    <Col sm={4}>
                         <div className='d-flex mt-3 align-content-center flex-wrap'>
                             <Button onClick={() => executeDeployment()} className='d-flex align-content-center' variant="primary">
-                                Start deployment
+                                Deploy facets
                             </Button>
                         </div>
                     </Col>
-                </Row>
+                    {(firstErc20FacetAddress.length > 0 && secondErc20FacetAddress.length > 0) && <>
+                        <Col sm={4}>
+                            <div className='d-flex mt-3 align-content-center flex-wrap'>
+                                <Button onClick={() => configureFacets()} className='d-flex align-content-center' variant="warning">
+                                    Configure facets
+                                </Button>
+                            </div>
+                        </Col>
+                    </>}
 
-                <Row>
-                    <Col sm={12}>
-                        {firstErc20FacetAddress !== '' && <p>First facet ERC20 token deployed.</p>}
-                        {secondErc20FacetAddress !== '' && <p>Second facet ERC20 token deployed.</p>}
-                        {isFirstConfigured && <p>First ERC20 facet configured. ({firstErc20Name} / {firstErc20Symbol} )</p>}
-                        {isSecondConfigured && <p>Second ERC20 facet configured. ({secondErc20Name} / {secondErc20Symbol} )</p>}
-
-                    </Col>
                 </Row>
             </Card.Body>
         </Card>

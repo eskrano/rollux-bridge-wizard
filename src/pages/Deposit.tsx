@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from  "react";
+import React, { FC, useEffect, useState } from "react";
 import { BridgeForm, BridgeAction } from "../components/BridgeForm";
 import { Alert, Card } from "react-bootstrap";
 import { Contract, utils } from "ethers";
@@ -20,14 +20,16 @@ export const Deposit: FC<{}> = () => {
     const [message, setMessage] = useState<string>('');
     const [messageVariant, setMessageVariant] = useState<Variant>('primary');
 
-    const { send: sendDepositCall , state: stateDepositCall} = useContractFunction(
+    const { send: sendDepositCall, state: stateDepositCall } = useContractFunction(
         bridgeContractEthers,
         "depositETH"
     )
 
     useEffect(() => {
-        setMessage(`TX Status  = ${stateDepositCall.status}`)
-    }, [stateDepositCall]) 
+        if (stateDepositCall.status !== 'None') {
+            setMessage(`TX Status  = ${stateDepositCall.status}`)
+        }
+    }, [stateDepositCall])
 
     const handleDeposit = async (amount: string, isNative: boolean, tokenAddress: string) => {
         console.log("Submitted bridge");
@@ -49,9 +51,9 @@ export const Deposit: FC<{}> = () => {
             </Card.Header>
             <Card.Body>
                 {message.length > 0 && <Alert variant={messageVariant}>
-                        {message}
-                    </Alert>} 
-                <BridgeForm direction={BridgeAction.Deposit} onSubmit={handleDeposit}/>
+                    {message}
+                </Alert>}
+                <BridgeForm direction={BridgeAction.Deposit} onSubmit={handleDeposit} />
             </Card.Body>
         </Card>
     )
