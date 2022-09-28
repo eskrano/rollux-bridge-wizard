@@ -44,21 +44,21 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
     // effects
 
     useEffect(() => {
-        if (utils.isAddress(firstErc20FacetAddress)) {
+        if (utils.isAddress(firstErc20DiamondAddress)) {
             setERC20Facet1(
-                new Contract(firstErc20FacetAddress, new utils.Interface(ERC20BasicFacet))
+                new Contract(firstErc20DiamondAddress, new utils.Interface(ERC20BasicFacet))
             )
         }
-    }, [firstErc20FacetAddress])
+    }, [firstErc20DiamondAddress])
 
 
     useEffect(() => {
-        if (utils.isAddress(secondErc20FacetAddress)) {
+        if (utils.isAddress(secondErc20DiamondAddress)) {
             setERC20Facet2(
-                new Contract(secondErc20FacetAddress, new utils.Interface(ERC20BasicFacet))
+                new Contract(secondErc20DiamondAddress, new utils.Interface(ERC20BasicFacet))
             )
         }
-    }, [secondErc20FacetAddress])
+    }, [secondErc20DiamondAddress])
 
     useEffect(() => {
         if (isFirstConfigured && isSecondConfigured) {
@@ -70,8 +70,6 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
     // contracts
 
     const factoryContract = new Contract('0x49533069283be8DD3B59ca0A3bbAd044B2f9f0B6', new utils.Interface(FactoryABI));
-    // const ERC20Facet1 = new Contract(firstErc20FacetAddress || Rollux.multicallAddress, new utils.Interface(ERC20BasicFacet));
-    // const ERC20Facet2 = new Contract(secondErc20FacetAddress || Rollux.multicallAddress, new utils.Interface(ERC20BasicFacet));
 
 
     const { send, state } = useContractFunction(factoryContract, 'deployDiamond');
@@ -105,13 +103,12 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
     const configureFacets = async () => {
 
         if (ERC20Facet1) {
-            console.log(
-                firstErc20Name,
-                firstErc20Symbol,
-                utils.parseEther(firstErc20Supply),
-                ERC20Facet1?.address
-            )
+            console.log(ERC20Facet1.address);
         }
+        if (ERC20Facet2) {
+            console.log(ERC20Facet2.address);
+        }
+
 
         await sendFirstInit(
             firstErc20Name,
@@ -120,12 +117,12 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
         )
 
 
-
         await sendSecondInit(
             secondErc20Name,
             secondErc20Symbol,
             utils.parseEther(secondErc20Supply)
         )
+
     }
 
 
@@ -137,6 +134,11 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
             const event = getDeployedEvent(state.receipt);
 
             if (event !== undefined) {
+
+                console.log("FACET---1")
+                // @ts-ignore
+                console.log(event.args);
+
                 //@ts-ignore
                 setFirstErc20FacetAddress(event.args.facets[0])
                 //@ts-ignore
@@ -150,6 +152,10 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
             const event = getDeployedEvent(stateSecondFacet.receipt);
 
             if (event !== undefined) {
+
+                console.log("FACET---2")
+                // @ts-ignore
+                console.log(event.args);
                 //@ts-ignore
                 setSecondErc20FacetAddress(event.args.facets[0])
                 //@ts-ignore
