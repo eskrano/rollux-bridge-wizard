@@ -9,14 +9,25 @@ import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { Rollux } from '../../../networks/Rollux';
 
 export interface FirstStepPageProps {
-    onERC20Deployed: () => void,
-    onERC20Initialized: (facetAddress: string, index: number) => void
+    onDone: (results: FirstStepConfiguredCallbackProps) => void,
+}
+
+export interface FirstStepConfiguredCallbackProps {
+    erc1_name: string,
+    erc1_symbol: string,
+    erc1_ts: string,
+    erc1_facetAddress: string,
+    erc1_diamondAddress: string,
+    erc2_name: string,
+    erc2_symbol: string,
+    erc2_ts: string,
+    erc2_facetAddress: string,
+    erc2_diamondAddress: string,
 }
 
 export const FirstStep: FC<FirstStepPageProps> = (props) => {
 
     const { library } = useEthers();
-    const { network } = useNetwork();
 
 
     const [firstErc20Name, setFirstErc20Name] = useState<string>('');
@@ -41,7 +52,17 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
     const [ERC20Facet1, setERC20Facet1] = useState<Contract | Falsy>(null);
     const [ERC20Facet2, setERC20Facet2] = useState<Contract | Falsy>(null);
 
+    // ui flags
+
+    const [hideDeployButton, setHideDeployButton] = useState<boolean>(false);
+    const [hideConfigureButton, setHideConfigureButton] = useState<boolean>(false);
+
+
     // effects
+
+
+
+
 
     useEffect(() => {
         if (utils.isAddress(firstErc20DiamondAddress)) {
@@ -60,16 +81,10 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
         }
     }, [secondErc20DiamondAddress])
 
-    useEffect(() => {
-        if (isFirstConfigured && isSecondConfigured) {
-            props.onERC20Initialized(firstErc20FacetAddress, 1);
-            props.onERC20Initialized(secondErc20FacetAddress, 2);
-        }
-    }, [isFirstConfigured, isSecondConfigured]);
 
     // contracts
 
-    const factoryContract = new Contract('0x49533069283be8DD3B59ca0A3bbAd044B2f9f0B6', new utils.Interface(FactoryABI));
+    const factoryContract = new Contract('0xcF7d5c20b1f60b2326305A0BB256359EDC714c1A', new utils.Interface(FactoryABI));
 
 
     const { send, state } = useContractFunction(factoryContract, 'deployDiamond');
@@ -79,6 +94,51 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
     const { send: sendFirstInit, state: stateFirstInit } = useContractFunction(ERC20Facet1, 'initERC20BasicFacet');
     const { send: sendSecondInit, state: stateSecondInit } = useContractFunction(ERC20Facet2, 'initERC20BasicFacet');
 
+
+
+    useEffect(() => {
+        if (isFirstConfigured && isSecondConfigured) {
+            props.onDone({
+                erc1_name: firstErc20Name,
+                erc1_symbol: firstErc20Symbol,
+                erc1_ts: firstErc20Supply,
+                erc1_diamondAddress: firstErc20DiamondAddress,
+                erc1_facetAddress: firstErc20FacetAddress,
+                erc2_name: secondErc20Name,
+                erc2_symbol: secondErc20Supply,
+                erc2_ts: secondErc20Supply,
+                erc2_diamondAddress: secondErc20DiamondAddress,
+                erc2_facetAddress: secondErc20FacetAddress,
+            })
+
+            setHideConfigureButton(true);
+        }
+    }, [
+        isFirstConfigured,
+        isSecondConfigured,
+        firstErc20DiamondAddress,
+        firstErc20FacetAddress,
+        firstErc20Name,
+        firstErc20Supply,
+        firstErc20Symbol,
+        secondErc20Name,
+        secondErc20Symbol,
+        secondErc20Supply,
+        secondErc20DiamondAddress,
+        secondErc20FacetAddress
+    ])
+
+    useEffect(() => {
+        if (stateFirstInit.receipt) {
+            setIsFirstConfigured(true);
+        }
+    }, [stateFirstInit]);
+
+    useEffect(() => {
+        if (stateSecondInit.receipt) {
+            setIsSecondConfigured(true);
+        }
+    }, [stateSecondInit]);
 
     const getDeployedEvent = (receipt: TransactionReceipt): Array<string> | undefined => {
         // @ts-ignore
@@ -102,25 +162,22 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
 
     const configureFacets = async () => {
 
-        if (ERC20Facet1) {
-            console.log(ERC20Facet1.address);
-        }
-        if (ERC20Facet2) {
-            console.log(ERC20Facet2.address);
-        }
+        setHideDeployButton(true);
 
 
         await sendFirstInit(
             firstErc20Name,
             firstErc20Symbol,
-            utils.parseEther(firstErc20Supply)
+            utils.parseEther(firstErc20Supply),
+            { gasLimit: 10000000 }
         )
 
 
         await sendSecondInit(
             secondErc20Name,
             secondErc20Symbol,
-            utils.parseEther(secondErc20Supply)
+            utils.parseEther(secondErc20Supply),
+            { gasLimit: 10000000 }
         )
 
     }
@@ -179,19 +236,19 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
     return (
         <Card className='mt-3'>
             <Card.Header>
-                Initialize ERC20 tokens
+                Initialize ERC20 tokens {(isFirstConfigured && isSecondConfigured) && <span className="text-bold text-success">Done!</span>}
             </Card.Header>
             <Card.Body>
                 <Row>
-                    <Col sm={6}>
+                    <Col sm={6} className={isFirstConfigured ? 'not-active' : ''}>
                         <ERC20DeploymentForm setTotalSupply={setFirstErc20Supply} setName={setFirstErc20Name} setSymbol={setFirstErc20Symbol} />
                     </Col>
-                    <Col sm={6}>
+                    <Col sm={6} className={isSecondConfigured ? 'not-active' : ''}>
                         <ERC20DeploymentForm setTotalSupply={setSecondErc20Supply} setName={setSecondErc20Name} setSymbol={setSecondErc20Symbol} />
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm={4}>
+                    <Col sm={4} className={hideDeployButton === true ? 'not-active': ''}>
                         <div className='d-flex mt-3 align-content-center flex-wrap'>
                             <Button onClick={() => executeDeployment()} className='d-flex align-content-center' variant="primary">
                                 Deploy facets
@@ -199,7 +256,7 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
                         </div>
                     </Col>
                     {(firstErc20FacetAddress.length > 0 && secondErc20FacetAddress.length > 0) && <>
-                        <Col sm={4}>
+                        <Col sm={4} className={hideConfigureButton === true ? 'not-active': ''}>
                             <div className='d-flex mt-3 align-content-center flex-wrap'>
                                 <Button onClick={() => configureFacets()} className='d-flex align-content-center' variant="warning">
                                     Configure facets
