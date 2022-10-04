@@ -25,7 +25,7 @@ export const ThirdStep: FC<ThirdStepProps> = (props) => {
     }, [deployDiamondState, diamondDeployEvents])
 
     const execute = async () => {
-        deployDiamond(['UniV2IndexingVaultFacet']);
+        deployDiamond(['UniV2IndexingVaultFacet'], { gasLimit: 15000000 });
     }
 
 
