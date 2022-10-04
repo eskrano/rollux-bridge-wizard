@@ -1,12 +1,11 @@
 import React, { FC, useEffect, useState } from 'react'
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import { ERC20DeploymentForm } from './ERC20DeploymentForm';
-import { useEthers, useContractFunction, useNetwork, Falsy } from '@usedapp/core';
+import { useContractFunction, Falsy } from '@usedapp/core';
 import { Contract, utils } from 'ethers';
 import FactoryABI from './../../../abi/DiamondContext.json'
 import ERC20BasicFacet from './../../../abi/ERC20BasicFacet.json'
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
-import { Rollux } from '../../../networks/Rollux';
 
 export interface FirstStepPageProps {
     onDone: (results: FirstStepConfiguredCallbackProps) => void,
@@ -26,9 +25,6 @@ export interface FirstStepConfiguredCallbackProps {
 }
 
 export const FirstStep: FC<FirstStepPageProps> = (props) => {
-
-    const { library } = useEthers();
-
 
     const [firstErc20Name, setFirstErc20Name] = useState<string>('');
     const [firstErc20Symbol, setFirstErc20Symbol] = useState<string>('');
@@ -125,7 +121,8 @@ export const FirstStep: FC<FirstStepPageProps> = (props) => {
         secondErc20Symbol,
         secondErc20Supply,
         secondErc20DiamondAddress,
-        secondErc20FacetAddress
+        secondErc20FacetAddress,
+        props,
     ])
 
     useEffect(() => {

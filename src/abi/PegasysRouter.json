@@ -8,7 +8,7 @@
             },
             {
                 "internalType": "address",
-                "name": "_WETH",
+                "name": "_WSYS",
                 "type": "address"
             }
         ],
@@ -17,7 +17,7 @@
     },
     {
         "inputs": [],
-        "name": "WETH",
+        "name": "WSYS",
         "outputs": [
             {
                 "internalType": "address",
@@ -111,7 +111,7 @@
             },
             {
                 "internalType": "uint256",
-                "name": "amountETHMin",
+                "name": "amountSYSMin",
                 "type": "uint256"
             },
             {
@@ -125,7 +125,7 @@
                 "type": "uint256"
             }
         ],
-        "name": "addLiquidityETH",
+        "name": "addLiquiditySYS",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -134,7 +134,7 @@
             },
             {
                 "internalType": "uint256",
-                "name": "amountETH",
+                "name": "amountSYS",
                 "type": "uint256"
             },
             {
@@ -367,7 +367,7 @@
             },
             {
                 "internalType": "uint256",
-                "name": "amountETHMin",
+                "name": "amountSYSMin",
                 "type": "uint256"
             },
             {
@@ -381,7 +381,7 @@
                 "type": "uint256"
             }
         ],
-        "name": "removeLiquidityETH",
+        "name": "removeLiquiditySYS",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -390,7 +390,7 @@
             },
             {
                 "internalType": "uint256",
-                "name": "amountETH",
+                "name": "amountSYS",
                 "type": "uint256"
             }
         ],
@@ -416,7 +416,7 @@
             },
             {
                 "internalType": "uint256",
-                "name": "amountETHMin",
+                "name": "amountSYSMin",
                 "type": "uint256"
             },
             {
@@ -430,11 +430,11 @@
                 "type": "uint256"
             }
         ],
-        "name": "removeLiquidityETHSupportingFeeOnTransferTokens",
+        "name": "removeLiquiditySYSSupportingFeeOnTransferTokens",
         "outputs": [
             {
                 "internalType": "uint256",
-                "name": "amountETH",
+                "name": "amountSYS",
                 "type": "uint256"
             }
         ],
@@ -460,7 +460,7 @@
             },
             {
                 "internalType": "uint256",
-                "name": "amountETHMin",
+                "name": "amountSYSMin",
                 "type": "uint256"
             },
             {
@@ -494,7 +494,7 @@
                 "type": "bytes32"
             }
         ],
-        "name": "removeLiquidityETHWithPermit",
+        "name": "removeLiquiditySYSWithPermit",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -503,7 +503,7 @@
             },
             {
                 "internalType": "uint256",
-                "name": "amountETH",
+                "name": "amountSYS",
                 "type": "uint256"
             }
         ],
@@ -529,7 +529,7 @@
             },
             {
                 "internalType": "uint256",
-                "name": "amountETHMin",
+                "name": "amountSYSMin",
                 "type": "uint256"
             },
             {
@@ -563,11 +563,11 @@
                 "type": "bytes32"
             }
         ],
-        "name": "removeLiquidityETHWithPermitSupportingFeeOnTransferTokens",
+        "name": "removeLiquiditySYSWithPermitSupportingFeeOnTransferTokens",
         "outputs": [
             {
                 "internalType": "uint256",
-                "name": "amountETH",
+                "name": "amountSYS",
                 "type": "uint256"
             }
         ],
@@ -652,7 +652,7 @@
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "amountOut",
+                "name": "amountOutMin",
                 "type": "uint256"
             },
             {
@@ -671,7 +671,7 @@
                 "type": "uint256"
             }
         ],
-        "name": "swapETHForExactTokens",
+        "name": "swapExactSYSForTokens",
         "outputs": [
             {
                 "internalType": "uint256[]",
@@ -705,41 +705,7 @@
                 "type": "uint256"
             }
         ],
-        "name": "swapExactETHForTokens",
-        "outputs": [
-            {
-                "internalType": "uint256[]",
-                "name": "amounts",
-                "type": "uint256[]"
-            }
-        ],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "amountOutMin",
-                "type": "uint256"
-            },
-            {
-                "internalType": "address[]",
-                "name": "path",
-                "type": "address[]"
-            },
-            {
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "deadline",
-                "type": "uint256"
-            }
-        ],
-        "name": "swapExactETHForTokensSupportingFeeOnTransferTokens",
+        "name": "swapExactSYSForTokensSupportingFeeOnTransferTokens",
         "outputs": [],
         "stateMutability": "payable",
         "type": "function"
@@ -772,7 +738,7 @@
                 "type": "uint256"
             }
         ],
-        "name": "swapExactTokensForETH",
+        "name": "swapExactTokensForSYS",
         "outputs": [
             {
                 "internalType": "uint256[]",
@@ -811,7 +777,7 @@
                 "type": "uint256"
             }
         ],
-        "name": "swapExactTokensForETHSupportingFeeOnTransferTokens",
+        "name": "swapExactTokensForSYSSupportingFeeOnTransferTokens",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -896,6 +862,40 @@
                 "type": "uint256"
             },
             {
+                "internalType": "address[]",
+                "name": "path",
+                "type": "address[]"
+            },
+            {
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "deadline",
+                "type": "uint256"
+            }
+        ],
+        "name": "swapSYSForExactTokens",
+        "outputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "amounts",
+                "type": "uint256[]"
+            }
+        ],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "amountOut",
+                "type": "uint256"
+            },
+            {
                 "internalType": "uint256",
                 "name": "amountInMax",
                 "type": "uint256"
@@ -916,7 +916,7 @@
                 "type": "uint256"
             }
         ],
-        "name": "swapTokensForExactETH",
+        "name": "swapTokensForExactSYS",
         "outputs": [
             {
                 "internalType": "uint256[]",
